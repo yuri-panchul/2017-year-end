@@ -1,0 +1,5 @@
+project/
+sim/
+*.bak
+*.swp
+*.swo
