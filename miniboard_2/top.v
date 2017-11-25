@@ -1,11 +1,9 @@
 module top
 (
     input        clk,
-    input        key,
-    output [3:0] led
+    input        rst_n,
+    output [2:0] led
 );
-
-    wire rst_n = key [0];
 
     reg [31:0] cnt;
     
@@ -15,6 +13,6 @@ module top
         else
             cnt <= cnt + 1;
 
-    assign led = cnt [29:22];
+    assign led = ~ cnt [27:24];
 
 endmodule

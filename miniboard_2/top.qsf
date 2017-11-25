@@ -1,4 +1,4 @@
-set_global_assignment   -name DEVICE                    EP2C5T144C8
+set_global_assignment   -name DEVICE                    EP2C5T144I8
 set_global_assignment   -name NUM_PARALLEL_PROCESSORS   4
 set_global_assignment   -name PROJECT_OUTPUT_DIRECTORY  .
 
@@ -11,10 +11,8 @@ set_global_assignment   -name SDC_FILE                  ../top.sdc
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
 
 set_location_assignment PIN_17  -to clk
+set_location_assignment PIN_144 -to rst_n
 
-set_location_assignment PIN_144 -to key
-
-set_location_assignment PIN_25  -to led[0]
-set_location_assignment PIN_31  -to led[1]
-set_location_assignment PIN_41  -to led[2]
-set_location_assignment PIN_53  -to led[3]
+set_location_assignment PIN_3   -to led[0]
+set_location_assignment PIN_7   -to led[1]
+set_location_assignment PIN_9   -to led[2]
