@@ -20,14 +20,14 @@ module hc_sr04_receiver
         speed_of_sound_meters_per_second   = 343,
         max_range_in_centimeters           = 400,  // From datasheet
 
-        measurement_cycle_in_milliseconds  = 60,   // From datasheet
+        measurement_cycle_in_milliseconds  = 200,  // From datasheet min is 60
         trig_time_in_microseconds          = 10,   // From datasheet
 
         measurement_cycle_time
-            = measurement_cycle_in_milliseconds * clk_frequency / 1000,
+            = measurement_cycle_in_milliseconds * (clk_frequency / 1000),
 
         trig_time
-            = trig_time_in_microseconds * clk_frequency / 1000000,
+            = trig_time_in_microseconds * (clk_frequency / 1000000),
         
         echo_clk_cycles_per_centimeters
         
@@ -45,7 +45,7 @@ module hc_sr04_receiver
         // To accomodate values up to max_echo_time
         echo_cnt_width = $clog2 (max_echo_time + 1);
 
-    `ifdef SIMULATION_ONLY
+    `ifndef SIMULATION_ONLY
     
     initial
     begin
@@ -68,10 +68,12 @@ module hc_sr04_receiver
     always @ (posedge clk or negedge rst_n)
         if (! rst_n)
             trig_cnt <= 0;
-        else if (trig_cnt == measurement_cycle_time)
+        else if (trig_cnt == measurement_cycle_time - 1)
             trig_cnt <= 0;
         else
             trig_cnt <= trig_cnt + 1;
+
+    // We have to wait after reset and after each measurement
 
     always @ (posedge clk or negedge rst_n)
         if (! rst_n)
@@ -101,10 +103,18 @@ module hc_sr04_receiver
             relative_distance <= 0;
         end
         else if (posedge_echo)
+        begin
             echo_cnt <= 0;
+        end
         else if (negedge_echo)
-            relative_distance <= echo_cnt [echo_cnt_width - 1 : echo_cnt_width - relative_distance_width];
+        begin
+            relative_distance
+                <= echo_cnt [   echo_cnt_width - 1 
+                              : echo_cnt_width - relative_distance_width ];
+        end
         else
+        begin
             echo_cnt <= echo_cnt + 1;
+        end
 
 endmodule
