@@ -4,8 +4,6 @@ create_clock -period "50.0 MHz" [get_ports MAX10_CLK2_50]
 
 derive_clock_uncertainty
 
-create_generated_clock -name {clk} -source [get_ports {MAX10_CLK1_50}] [get_registers {clk_divider:i_clk_divider|cnt[*]}]
-
 set_false_path -from * -to [get_ports {LEDR[*]}]
 set_false_path -from * -to [get_ports {HEX0[*]}]
 set_false_path -from * -to [get_ports {HEX1[*]}]

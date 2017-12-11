@@ -1,51 +1,84 @@
 module hc_sr04_receiver
 # (
-    parameter clk_frequency = 50_000_000
+    parameter clk_frequency           = 50000000,
+              relative_distance_width = 8
 )
 (
-    input            clk,
-    input            rst_n,
-    output reg       trig,
-    input            echo,
-    output reg [7:0] relative_distance
+    input      clk,
+    input      rst_n,
+    output reg trig,
+    input      echo,
+
+    output reg [relative_distance_width - 1:0] relative_distance
 );
+
+    // Datasheet: http://www.micropik.com/PDF/HCSR04.pdf
+    // Time is measured in clk cycles unless noted otherwise
 
     localparam
 
-        n_clk_cycles_in_microsecond         = clk_frequency / 1_000_000,
-        n_clk_cycles_in_millisecond         = clk_frequency / 1_000,
+        speed_of_sound_meters_per_second   = 343,
+        max_range_in_centimeters           = 400,  // From datasheet
 
-        idle_time_in_milliseconds           = 60,
-        trig_time_in_microseconds           = 10,
+        measurement_cycle_in_milliseconds  = 60,   // From datasheet
+        trig_time_in_microseconds          = 10,   // From datasheet
 
-        // Roughly clk / cm for 50 MHz clk
+        measurement_cycle_time
+            = measurement_cycle_in_milliseconds * clk_frequency / 1000,
 
-        centimeters_in_microsecond_of_pulse = 58,
-        max_range_in_centimeters            = 400,
+        trig_time
+            = trig_time_in_microseconds * clk_frequency / 1000000,
+        
+        echo_clk_cycles_per_centimeters
+        
+            =   clk_frequency
+              * 2    // Sound wave goes 2 ways
+              / speed_of_sound_meters_per_second
+              / 100, // Number of centimeters in meter
+              
+        max_echo_time
+            = max_range_in_centimeters * echo_clk_cycles_per_centimeters,
 
-        idle_time_in_cycles
-            = idle_time_in_milliseconds * n_clk_cycles_in_millisecond,
+        // To accomodate values up to measurement_cycle_time - 1
+        trig_cnt_width = $clog2 (measurement_cycle_time),
+        
+        // To accomodate values up to max_echo_time
+        echo_cnt_width = $clog2 (max_echo_time + 1);
 
-        trig_time_in_cycles
-            = trig_time_in_microseconds * n_clk_cycles_in_microseconds;
+    `ifdef SIMULATION_ONLY
+    
+    initial
+    begin
+        $display ( "speed_of_sound_meters_per_second  : %0d", speed_of_sound_meters_per_second  );
+        $display ( "max_range_in_centimeters          : %0d", max_range_in_centimeters          );
+        $display ( "measurement_cycle_in_milliseconds : %0d", measurement_cycle_in_milliseconds );
+        $display ( "trig_time_in_microseconds         : %0d", trig_time_in_microseconds         );
+        $display ( "measurement_cycle_time            : %0d", measurement_cycle_time            );
+        $display ( "trig_time                         : %0d", trig_time                         );
+        $display ( "echo_clk_cycles_per_centimeters   : %0d", echo_clk_cycles_per_centimeters   );
+        $display ( "max_echo_time                     : %0d", max_echo_time                     );
+        $display ( "trig_cnt_width                    : %0d", trig_cnt_width                    );
+        $display ( "echo_cnt_width                    : %0d", echo_cnt_width                    );
+    end
+    
+    `endif
 
-    reg [17:0] trig_cnt;  // Need to adjust the counter size for clk_frequency
+    reg [trig_cnt_width - 1:0] trig_cnt;
 
     always @ (posedge clk or negedge rst_n)
         if (! rst_n)
             trig_cnt <= 0;
+        else if (trig_cnt == measurement_cycle_time)
+            trig_cnt <= 0;
         else
             trig_cnt <= trig_cnt + 1;
 
-    // After reset we need some time for the device initialization
-    // After each measurement we also need some idle time
-            
     always @ (posedge clk or negedge rst_n)
         if (! rst_n)
             trig <= 0;
-        else if (trig_cnt == idle_time_in_cycles - trig_time_in_cycles)
+        else if (trig_cnt == measurement_cycle_time - trig_time - 1)
             trig <= 1;
-        else if (trig_cnt == idle_time_in_cycles)
+        else if (trig_cnt == measurement_cycle_time - 1)
             trig <= 0;
 
     reg prev_echo;
@@ -59,15 +92,18 @@ module hc_sr04_receiver
     wire posedge_echo = ~ prev_echo &   echo;
     wire negedge_echo =   prev_echo & ~ echo;
 
-    reg [7:0] echo_cnt;
+    reg [echo_cnt_width - 1:0] echo_cnt;
 
     always @ (posedge clk or negedge rst_n)
         if (! rst_n)
-            echo_cnt <= 0;
+        begin
+            echo_cnt          <= 0;
+            relative_distance <= 0;
+        end
         else if (posedge_echo)
             echo_cnt <= 0;
         else if (negedge_echo)
-            relative_distance <= echo_cnt;
+            relative_distance <= echo_cnt [echo_cnt_width - 1 : echo_cnt_width - relative_distance_width];
         else
             echo_cnt <= echo_cnt + 1;
 
