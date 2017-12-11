@@ -22,19 +22,21 @@ module board_wrapper
     wire clk   = MAX10_CLK1_50;
     wire rst_n = ~ SW [9];
 
-    wire hc_sr04_vcc = 1;
     wire hc_sr04_trig;
     wire hc_sr04_echo;
-    wire hc_sr04_gnd = 0;
 
-    assign GPIO [29]    = hc_sr04_vcc;
-    assign GPIO [31]    = hc_sr04_trig;
-    assign hc_sr04_echo = GPIO [33];
-    assign GPIO [35]    = hc_sr04_gnd;
+    assign GPIO [33]    = hc_sr04_trig;
+    assign hc_sr04_echo = GPIO [35];
 
-    wire [31:0] relative_distance;
+    wire [11:0] relative_distance;
 
-    hc_sr04_receiver i_hc_sr04_receiver
+    hc_sr04_receiver
+    #
+    (
+        .clk_frequency           ( 50000000 ),
+        .relative_distance_width (       12 )
+    )
+    i_hc_sr04_receive
     (
         .clk                ( clk               ),
         .rst_n              ( rst_n             ),
@@ -42,15 +44,11 @@ module board_wrapper
         .echo               ( hc_sr04_echo      ),
         .relative_distance  ( relative_distance )
     );
-/*
+
     assign HEX5 = ~ 8'b0;
     assign HEX4 = ~ 8'b0;
     assign HEX3 = ~ 8'b0;
-    assign HEX2 = ~ 8'b0;
-*/
-    display_driver i_digit_5 (relative_distance [23:20], HEX5);
-    display_driver i_digit_4 (relative_distance [19:16], HEX4);
-    display_driver i_digit_3 (relative_distance [15:12], HEX3);
+
     display_driver i_digit_2 (relative_distance [11: 8], HEX2);
     display_driver i_digit_1 (relative_distance [ 7: 4], HEX1);
     display_driver i_digit_0 (relative_distance [ 3: 0], HEX0);
