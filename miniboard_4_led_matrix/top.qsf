@@ -1,0 +1,42 @@
+set_global_assignment   -name DEVICE                    EP4CE6E22C8
+set_global_assignment   -name NUM_PARALLEL_PROCESSORS   4
+set_global_assignment   -name PROJECT_OUTPUT_DIRECTORY  .
+
+set_global_assignment   -name TOP_LEVEL_ENTITY          top
+
+set_global_assignment   -name SEARCH_PATH               ..
+set_global_assignment   -name VERILOG_FILE              ../top.v
+set_global_assignment   -name SDC_FILE                  ../top.sdc
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
+
+set_location_assignment PIN_25  -to clock
+set_location_assignment PIN_74  -to reset_n
+set_location_assignment PIN_73  -to key
+
+set_location_assignment PIN_138 -to led[0]
+set_location_assignment PIN_141 -to led[1]
+set_location_assignment PIN_142 -to led[2]
+set_location_assignment PIN_143 -to led[3]
+set_location_assignment PIN_144 -to led[4]
+set_location_assignment PIN_1   -to led[5]
+set_location_assignment PIN_2   -to led[6]
+set_location_assignment PIN_3   -to led[7]
+
+set_location_assignment PIN_10  -to j1[0]
+set_location_assignment PIN_28  -to j1[1]
+set_location_assignment PIN_31  -to j1[2]
+set_location_assignment PIN_33  -to j1[3]
+set_location_assignment PIN_38  -to j1[4]
+set_location_assignment PIN_42  -to j1[5]
+set_location_assignment PIN_49  -to j1[6]
+set_location_assignment PIN_51  -to j1[7]
+
+set_location_assignment PIN_7   -to j1[8]
+set_location_assignment PIN_11  -to j1[9]
+set_location_assignment PIN_30  -to j1[10]
+set_location_assignment PIN_32  -to j1[11]
+set_location_assignment PIN_34  -to j1[12]
+set_location_assignment PIN_39  -to j1[13]
+set_location_assignment PIN_46  -to j1[14]
+set_location_assignment PIN_50  -to j1[15]
