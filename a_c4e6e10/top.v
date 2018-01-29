@@ -1,9 +1,7 @@
 module top
 (
     input         clk,
-    input         rst_n,
-    input         extra_key,
-    input  [ 1:0] key,
+    input  [ 3:0] key,
     input  [ 7:0] sw,
     output [11:0] led,
     output [ 7:0] abcdefgh,
@@ -21,9 +19,9 @@ module top
 
     // assign led = cnt [29:22];
 */
-    assign led      = { rst_n, extra_key, key, sw };
+    assign led      = { sw, key };
     assign abcdefgh = sw;
-    output digit    = sw;
-    output buzzer   = key [0];
+    assign digit    = sw;
+    assign buzzer   = key [0];
 
 endmodule
