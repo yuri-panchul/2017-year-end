@@ -1,4 +1,5 @@
 #!/bin/sh
+# synthesize.sh
 
 . ./setup.sh
 

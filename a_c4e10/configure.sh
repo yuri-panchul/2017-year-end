@@ -1,4 +1,5 @@
 #!/bin/sh
+# configure.sh
 
 . ./setup.sh
 
