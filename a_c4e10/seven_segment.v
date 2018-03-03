@@ -45,7 +45,7 @@ module seven_segment
     reg [n_digits - 1:0] anodes_d, anodes_q;
 
     always @*
-        anodes_d <= { anodes_q [0], anodes_q [n_digits - 1 : 1] };
+        anodes_d <= 8'b11110000; //{ anodes_q [0], anodes_q [n_digits - 1 : 1] };
 
     always @ (posedge clk or negedge rst_n)
         if (! rst_n)

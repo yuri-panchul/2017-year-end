@@ -9,11 +9,11 @@ module top
     output        buzzer
 );
 
-    wire rst_n = key [3];
+    wire rst_n = ~ key [3];
 
     wire seven_segment_strobe;
 
-    strobe_gen # (.w (24)) i_seven_segment_strobe
+    strobe_gen # (.w (20)) i_seven_segment_strobe
         (clk, rst_n, seven_segment_strobe);
 
     seven_segment #(.w ( 32)) i_seven_segment
