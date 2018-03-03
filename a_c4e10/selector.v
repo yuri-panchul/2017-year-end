@@ -1,3 +1,5 @@
+`include "config.vh"
+
 module selector
 #(
     parameter w = 8,

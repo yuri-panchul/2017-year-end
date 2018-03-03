@@ -1,3 +1,5 @@
+`include "config.vh"
+
 module strobe_gen
 # (
     parameter w = 24

@@ -1,3 +1,5 @@
+`include "config.vh"
+
 module register
 # (
     parameter w = 1

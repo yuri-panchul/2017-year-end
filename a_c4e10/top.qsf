@@ -2,11 +2,20 @@ set_global_assignment   -name DEVICE                    EP4CE10E22C8
 set_global_assignment   -name NUM_PARALLEL_PROCESSORS   4
 set_global_assignment   -name PROJECT_OUTPUT_DIRECTORY  .
 
-set_global_assignment   -name TOP_LEVEL_ENTITY          top
+set_global_assignment   -name TOP_LEVEL_ENTITY top
 
-set_global_assignment   -name SEARCH_PATH               ..
-set_global_assignment   -name VERILOG_FILE              ../top.v
-set_global_assignment   -name SDC_FILE                  ../top.sdc
+set_global_assignment   -name SEARCH_PATH  ..
+set_global_assignment   -name VERILOG_FILE ../top.v
+set_global_assignment   -name SDC_FILE     ../top.sdc
+
+set_global_assignment   -name VERILOG_FILE ../counter.v
+set_global_assignment   -name VERILOG_FILE ../register_no_rst.v
+set_global_assignment   -name VERILOG_FILE ../register.v
+set_global_assignment   -name VERILOG_FILE ../selector.v
+set_global_assignment   -name VERILOG_FILE ../seven_segment.v
+set_global_assignment   -name VERILOG_FILE ../shift_register.v
+set_global_assignment   -name VERILOG_FILE ../strobe_gen.v
+set_global_assignment   -name VERILOG_FILE ../sync_and_debounce.v
 
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
 

@@ -1,3 +1,5 @@
+`include "config.vh"
+
 module seven_segment
 # (
     parameter w              = 32,
@@ -40,7 +42,7 @@ module seven_segment
 
     //------------------------------------------------------------------------
 
-    reg [w - 1:0] anodes_d, anodes_q;
+    reg [n_digits - 1:0] anodes_d, anodes_q;
 
     always @*
         anodes_d <= { anodes_q [0], anodes_q [n_digits - 1 : 1] };

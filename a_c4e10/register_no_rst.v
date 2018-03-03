@@ -1,3 +1,5 @@
+`include "config.vh"
+
 module register_no_rst
 # (
     parameter w = 1
@@ -9,7 +11,7 @@ module register_no_rst
     output reg [w - 1:0] q
 );
 
-    always @ (posedge clk or negedge rst_n)
+    always @ (posedge clk)
         if (en)
             q <= d;
 

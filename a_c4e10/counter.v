@@ -16,7 +16,7 @@ module counter
     wire [w - 1:0] q;
     wire [w - 1:0] d = q + 1'b1;
 
-    register i_reg (clk, rst_n, en, d, q);
+    register # (w) i_reg (clk, rst_n, en, d, q);
     
     assign out = q;
 

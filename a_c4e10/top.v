@@ -8,20 +8,27 @@ module top
     output [ 7:0] digit,
     output        buzzer
 );
-/*
-    reg [31:0] cnt;
-    
-    always @ (posedge clk or negedge rst_n)
-        if (! rst_n)
-            cnt <= 0;
-        else if (en)
-            cnt <= cnt + 1;
 
-    // assign led = cnt [29:22];
-*/
+    wire rst_n = key [3];
+
+    wire seven_segment_strobe;
+
+    strobe_gen # (.w (24)) i_seven_segment_strobe
+        (clk, rst_n, seven_segment_strobe);
+
+    seven_segment #(.w ( 32)) i_seven_segment
+    (
+        .clk     ( clk                  ),
+        .rst_n   ( rst_n                ),
+        .en      ( seven_segment_strobe ),
+        .num     ( { sw, sw, sw, sw }   ),
+        .dots    ( sw                   ),
+        .abcdefg ( abcdefgh [7:1]       ),
+        .dot     ( abcdefgh [0]         ),
+        .anodes  ( digit                )
+    );
+
     assign led      = { sw, key };
-    assign abcdefgh = sw;
-    assign digit    = sw;
     assign buzzer   = key [0];
 
 endmodule

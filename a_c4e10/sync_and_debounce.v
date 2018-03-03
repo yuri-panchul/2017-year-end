@@ -1,3 +1,5 @@
+`include "config.vh"
+
 module sync_and_debounce_one
 # (
     parameter depth = 8
