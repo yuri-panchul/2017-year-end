@@ -59,15 +59,15 @@ module top
 
     assign j1 =
     {
-          rows [4],   rows [6], ~ cols [1], ~ cols [2],
-          rows [7], ~ cols [4],   rows [5],   rows [2],
-        ~ cols [7], ~ cols [6],   rows [1], ~ cols [0],
-          rows [3], ~ cols [5], ~ cols [3],   rows [0]
+        ~ rows [0], ~ rows [1],   cols [1], ~ rows [7],
+          cols [3], ~ rows [2],   cols [0], ~ rows [4],
+          cols [4],   cols [6], ~ rows [6], ~ rows [5],
+          cols [7], ~ rows [3],   cols [5],   cols [2]
     };
 
     //------------------------------------------------------------------------
 
-    wire button = ~ key;
+    wire button = ~ key [0];
     wire enable_rows, enable_cols;
 
     timer
