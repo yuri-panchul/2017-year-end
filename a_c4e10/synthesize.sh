@@ -2,12 +2,13 @@
 
 . ./setup.sh
 
-rm -rf syn
-mkdir -p syn
-cp top.qsf syn
-echo "# This file can be empty, all the settings are in .qsf file" > syn/top.qpf
-cd syn
+rm -rf $SYN_DIR
+mkdir -p $SYN_DIR
+cp top.qsf $SYN_DIR
+echo "# This file can be empty, all the settings are in .qsf file" > $SYN_DIR/top.qpf
+cd $SYN_DIR
 
 quartus_sh  --no_banner --flow compile top
 
+cd ..
 ./configure.sh

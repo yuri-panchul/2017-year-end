@@ -1,3 +1,4 @@
 #!/bin/sh
 
-rm -rf syn
+. ./setup.sh
+rm -rf $SYN_DIR
