@@ -24,7 +24,7 @@ then
     fi
 
     echo "Using cable ${CABLE_NAME_1}"
-    quartus_pgm --no_banner -c "$CABLE_NAME_1" --mode=jtag -o "P;top.sof"
+    quartus_pgm --no_banner -c "$CABLE_NAME_1" --mode=jtag -o "P;top.pof"
 else
     echo "Cannot detect a USB-Blaster cable connected"
     exit 1
