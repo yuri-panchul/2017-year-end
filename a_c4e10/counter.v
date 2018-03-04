@@ -10,7 +10,7 @@ module counter
     input            clk,
     input            rst_n,
     input            en,
-    output [w - 1:0] out
+    output [w - 1:0] cnt
 );
 
     wire [w - 1:0] q;
@@ -18,7 +18,7 @@ module counter
 
     register # (w) i_reg (clk, rst_n, en, d, q);
     
-    assign out = q;
+    assign cnt = q;
 
 endmodule
 
@@ -32,14 +32,14 @@ module counter
     input                clk,
     input                rst_n,
     input                en,
-    output reg [w - 1:0] out
+    output reg [w - 1:0] cnt
 );
 
     always @ (posedge clk or negedge rst_n)
         if (! rst_n)
-            out <= { w { 1'b0 } };
+            cnt <= { w { 1'b0 } };
         else if (en)
-            out <= out + 1'b1;
+            cnt <= cnt + 1'b1;
 
 endmodule
 

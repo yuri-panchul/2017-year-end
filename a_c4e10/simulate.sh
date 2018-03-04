@@ -7,4 +7,4 @@ rm -rf   $SIM_DIR
 mkdir -p $SIM_DIR
 cd       $SIM_DIR
 
-vsim -c -do ../modelsim_script.tcl
+vsim -do ../modelsim_script.tcl

@@ -11,7 +11,7 @@ module shift_register
     input            rst_n,
     input            en,
     input            in,
-    output [w - 1:0] out
+    output [w - 1:0] out_reg
 );
 
     wire [w - 1:0] q;
@@ -19,7 +19,7 @@ module shift_register
 
     register # (w) i_reg (clk, rst_n, en, d, q);
     
-    assign out = q;
+    assign out_reg = q;
 
 endmodule
 
@@ -34,14 +34,14 @@ module shift_register
     input                rst_n,
     input                en,
     input                in,
-    output reg [w - 1:0] out
+    output reg [w - 1:0] out_reg
 );
 
     always @ (posedge clk or negedge rst_n)
         if (! rst_n)
-            out <= { w { 1'b0 } };
+            out_reg <= { w { 1'b0 } };
         else if (en)
-            out <= { in, out [w - 1 : 1] };
+            out_reg <= { in, out_reg [w - 1 : 1] };
 
 endmodule
 

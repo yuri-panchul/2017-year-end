@@ -12,7 +12,7 @@ module sync_and_debounce_one
 
     reg  [depth - 1:0] cnt;
     reg  [        2:0] sync;
-    wire                  sw_in_s;
+    wire               sw_in_s;
 
     assign sw_in_s = sync [2];
 
@@ -50,7 +50,7 @@ module sync_and_debounce
         begin : gen_sync_and_debounce
            
            sync_and_debounce_one
-           # (.depth (8))
+           # (.depth (depth))
            i_sync_and_debounce_one
            (    
               .clk    ( clk             ),

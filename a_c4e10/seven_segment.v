@@ -20,22 +20,22 @@ module seven_segment
     function [6:0] dig_to_seg (input [3:0] dig);
 
         case (dig)
-        'h0: dig_to_seg = 'b1000000;  // a b c d e f g
-        'h1: dig_to_seg = 'b1111001;
-        'h2: dig_to_seg = 'b0100100;  //   --a--
-        'h3: dig_to_seg = 'b0110000;  //  |     |
-        'h4: dig_to_seg = 'b0011001;  //  f     b
-        'h5: dig_to_seg = 'b0010010;  //  |     |
-        'h6: dig_to_seg = 'b0000010;  //   --g--
-        'h7: dig_to_seg = 'b1111000;  //  |     |
+        'h0: dig_to_seg = 'b0000001;  // a b c d e f g
+        'h1: dig_to_seg = 'b1001111;
+        'h2: dig_to_seg = 'b0010010;  //   --a--
+        'h3: dig_to_seg = 'b0000110;  //  |     |
+        'h4: dig_to_seg = 'b1001100;  //  f     b
+        'h5: dig_to_seg = 'b0100100;  //  |     |
+        'h6: dig_to_seg = 'b0100000;  //   --g--
+        'h7: dig_to_seg = 'b0001111;  //  |     |
         'h8: dig_to_seg = 'b0000000;  //  e     c
-        'h9: dig_to_seg = 'b0011000;  //  |     |
+        'h9: dig_to_seg = 'b0001100;  //  |     |
         'ha: dig_to_seg = 'b0001000;  //   --d-- 
-        'hb: dig_to_seg = 'b0000011;
-        'hc: dig_to_seg = 'b1000110;
-        'hd: dig_to_seg = 'b0100001;
-        'he: dig_to_seg = 'b0000110;
-        'hf: dig_to_seg = 'b0001110;
+        'hb: dig_to_seg = 'b1100000;
+        'hc: dig_to_seg = 'b0110001;
+        'hd: dig_to_seg = 'b1000010;
+        'he: dig_to_seg = 'b0110000;
+        'hf: dig_to_seg = 'b0111000;
         endcase
 
     endfunction
@@ -45,7 +45,7 @@ module seven_segment
     reg [n_digits - 1:0] anodes_d, anodes_q;
 
     always @*
-        anodes_d <= 8'b11110000; //{ anodes_q [0], anodes_q [n_digits - 1 : 1] };
+        anodes_d <= { anodes_q [0], anodes_q [n_digits - 1 : 1] };
 
     always @ (posedge clk or negedge rst_n)
         if (! rst_n)
@@ -59,7 +59,7 @@ module seven_segment
 
     wire [bits_per_digit - 1:0] dig;
 
-    selector # (.w (4), .n (n_digits)) i_sel_dig
+    selector # (.w (bits_per_digit), .n (n_digits)) i_sel_dig
         (.d (num), .sel (~ anodes_d), .y (dig));
 
     register_no_rst # (7) i_abcdefg
@@ -79,10 +79,10 @@ module seven_segment
 
     register_no_rst i_dot
     (
-        .clk ( clk   ),
-        .en  ( en    ),
-        .d   ( dot_d ),
-        .q   ( dot   )
+        .clk (   clk   ),
+        .en  (   en    ),
+        .d   ( ~ dot_d ),
+        .q   (   dot   )
     ); 
 
 endmodule
