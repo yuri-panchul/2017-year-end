@@ -44,6 +44,29 @@ module top
 
     //------------------------------------------------------------------------
 
+    wire [15:0] shift_strobe_count;
+    wire [ 7:0] moore_fsm_out_count;
+    wire [ 7:0] mealy_fsm_out_count;
+    
+    wire [31:0] number_to_display =
+    {
+        shift_strobe_count,
+        moore_fsm_out_count,
+        mealy_fsm_out_count
+    };
+
+    //------------------------------------------------------------------------
+
+    counter # (16) i_shift_strobe_counter
+    (
+        .clk   ( clk                ),
+        .rst_n ( rst_n              ),
+        .en    ( shift_strobe       ),
+        .cnt   ( shift_strobe_count )
+    );
+
+    //------------------------------------------------------------------------
+
     moore_fsm i_moore_fsm
     (
         .clk   ( clk           ),
@@ -55,10 +78,10 @@ module top
     
     counter # (8) i_moore_fsm_out_counter
     (
-        .clk   ( clk                 ),
-        .rst_n ( rst_n               ),
-        .en    ( out_moore_fsm       ),
-        .count ( moore_fsm_out_count )
+        .clk   ( clk                          ),
+        .rst_n ( rst_n                        ),
+        .en    ( shift_strobe & out_moore_fsm ),
+        .cnt   ( moore_fsm_out_count          )
     );
 
     //------------------------------------------------------------------------
@@ -74,24 +97,11 @@ module top
     
     counter # (8) i_mealy_fsm_out_counter
     (
-        .clk   ( clk                 ),
-        .rst_n ( rst_n               ),
-        .en    ( out_mealy_fsm       ),
-        .count ( mealy_fsm_out_count )
+        .clk   ( clk                          ),
+        .rst_n ( rst_n                        ),
+        .en    ( shift_strobe & out_mealy_fsm ),
+        .cnt   ( mealy_fsm_out_count          )
     );
-
-    //------------------------------------------------------------------------
-
-    wire [15:0] shift_strobe_counter;
-    wire [ 7:0] moore_fsm_out_count;
-    wire [ 7:0] mealy_fsm_out_count;
-    
-    wire [31:0] number_to_display =
-    {
-        shift_strobe_counter,
-        moore_fsm_out_count,
-        mealy_fsm_out_count
-    };
 
     //------------------------------------------------------------------------
 

@@ -2,4 +2,5 @@
 # clean.sh
 
 . ./setup.sh
-rm -rf $SYN_DIR
+
+rm -rf $SIM_DIR $SYN_DIR
