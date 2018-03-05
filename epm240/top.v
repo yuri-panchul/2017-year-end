@@ -23,4 +23,34 @@ module top
 
     assign led = cnt [24];
 
+    wire [ 3:0] key = { io_15 , io_16 , io_17 , io_18 };
+    wire [ 7:0] sw  = { io_1  , io_2  , io_3  , io_4  , io_5  , io_6  , io_7  , io_8 };
+
+    wire [11:0] led2;
+    wire [ 7:0] abcdefgh;
+    wire [ 7:0] digit;
+    wire        buzzer;
+
+    assign { io_81 , io_82 , io_83 , io_84 , io_85 , io_86 ,
+             io_87 , io_88 , io_89 , io_90 , io_91 , io_92 } = led2;
+
+    assign { io_33 , io_34 , io_35 , io_36 ,
+             io_37 , io_38 , io_39 , io_40 } = abcdefgh;
+
+    assign { io_50 , io_51 , io_52 , io_53 ,
+             io_54 , io_55 , io_56 , io_57 } = digit;
+
+    assign io_58 = buzzer;
+
+    top2 i_top2
+    (
+        clk,
+        key,
+        sw,
+        led2,
+        abcdefgh,
+        digit,
+        buzzer
+    );
+
 endmodule
