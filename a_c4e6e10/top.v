@@ -74,7 +74,7 @@ module top
         .clk   ( clk           ),
         .rst_n ( rst_n         ),
         .en    ( shift_strobe  ),
-        .a     ( out_reg       ),
+        .a     ( out_reg [0]   ),
         .y     ( out_moore_fsm )
     );
     
@@ -95,7 +95,7 @@ module top
         .clk   ( clk           ),
         .rst_n ( rst_n         ),
         .en    ( shift_strobe  ),
-        .a     ( out_reg       ),
+        .a     ( out_reg [0]   ),
         .y     ( out_mealy_fsm )
     );
     
