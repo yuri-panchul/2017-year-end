@@ -1,7 +1,7 @@
-#!/bin/sh
-# configure.sh
+#!/bin/bash
+# configure.bash
 
-. ./setup.sh
+. ./setup.bash
 
 [ -d "$SYN_DIR" ] || \
     error 1 "synthesis directory ${SYN_DIR} does not exist. Run synthesis first."
