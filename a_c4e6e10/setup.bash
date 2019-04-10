@@ -54,7 +54,7 @@ info ()
 
 is_command_available ()
 {
-    command -v $1 1>&2 > /dev/null
+    command -v $1 &> /dev/null
 }
 
 #-----------------------------------------------------------------------------

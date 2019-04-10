@@ -11,19 +11,20 @@ guarded cd        $SIM_DIR
 
 #-----------------------------------------------------------------------------
 
-iverilog_available=0
-gtkwave_available=0
-vsim_available=0
+run_iverilog=0
+run_gtkwave=0
+run_vsim=0
 
-is_command_available iverilog && iverilog_available=1
-is_command_available gtkwave  && gtkwave_available=1
-is_command_available vsim     && vsim_available=1
+is_command_available iverilog && run_iverilog=1
+is_command_available gtkwave  && run_gtkwave=1
+is_command_available vsim     && run_vsim=1
 
 #-----------------------------------------------------------------------------
 
-if [ $iverilog_available = 1 ] && [ $vsim_available = 1 ]
+if [ $run_iverilog = 1 ] && [ $run_vsim = 1 ]
 then
-    printf "Two Verilog simulators are available to run: Icarus Verilog and Mentor ModelSim\n"
+    printf "Two Verilog simulators are available to run:"
+    printf " Icarus Verilog and Mentor ModelSim\n"
     printf "Which do you want to run?\n"
 
     options="Icarus ModelSim Both"
@@ -32,25 +33,59 @@ then
     select simulator in $options
     do
         case $simulator in
-        Icarus)   vsim_available=0     ; break ;;
-        ModelSim) iverilog_available=0 ; break ;;
-        Both)                            break ;;
+        Icarus)   run_vsim=0     ; break ;;
+        ModelSim) run_iverilog=0 ; break ;;
+        Both)                      break ;;
         esac
     done
 fi
 
+if [ $run_iverilog = 0 ] && [ $run_gtkwave = 1 ]
+then
+    run_gtkwave=0
+fi
+
+[ $run_iverilog = 0 ] && [ $run_vsim = 0 ] && \
+    error 1 "No Verilog simulator is available to run." \
+            "You need to install either Icarus Verilog" \
+            "or Mentor Questa / ModelSim."
+
 #-----------------------------------------------------------------------------
 
-#iverilog_available=$(is_command_available iverilog)
-#gtkwave_available=$(is_command_available gtkwave)
-#vsim_available=$(is_command_available vsim)
+if [ $run_iverilog = 1 ]
+then
+    iverilog -g2005 -I .. ../*.v &> icarus.compile.log 
+    ec=$?
+
+    if [ $ec != 0 ]
+    then
+        grep -i -A 5 error icarus.compile.log 2>&1
+        error $ec Icarus Verilog compiler errors
+    fi
+
+    vvp a.out &> icarus.simulate.log
+
+    ec=$?
+
+    if [ $ec != 0 ]
+    then
+        grep -i -A 5 error icarus.simulate.log 2>&1
+        tail -n 5 icarus.simulate.log 2>&1
+        error $ec Icarus Verilog simulator errors
+    fi
+
+    info Icarus Verilog simulation successfull
+    tail -n 5 icarus.simulate.log
+fi
 
 #-----------------------------------------------------------------------------
 
-echo "1$iverilog_available"
-echo "2$gtkwave_available"
-echo "3$vsim_available"
+echo "1$run_iverilog"
+echo "2$run_gtkwave"
+echo "3$run_vsim"
 exit
 
 
 guarded vsim -do ../modelsim_script.tcl
+
+exit 0

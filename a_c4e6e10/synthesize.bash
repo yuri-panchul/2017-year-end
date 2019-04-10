@@ -13,3 +13,5 @@ quartus_sh --no_banner --flow compile top | tee syn.log
 
 cd ..
 ./configure.bash
+
+exit 0
