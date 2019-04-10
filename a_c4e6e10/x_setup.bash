@@ -1,7 +1,11 @@
 #!/bin/bash
-# setup.bash
+# x_setup.bash
 
 set +e  # Don't exit immediately if a command exits with a non-zero status
+
+#-----------------------------------------------------------------------------
+
+readonly script=$(basename "$0")
 
 #-----------------------------------------------------------------------------
 
@@ -25,7 +29,7 @@ error ()
 
     [ $ec != 0 ] || return
 
-    printf "$0: error: $*" 1>&2
+    printf "$script: error: $*" 1>&2
     
     if [ $ec != 1 ]
     then
@@ -40,14 +44,14 @@ error ()
 
 warning ()
 {
-    printf "$0: warning: $*\n" 1>&2
+    printf "$script: warning: $*\n" 1>&2
 }
 
 #-----------------------------------------------------------------------------
 
 info ()
 {
-    printf "$0: $*\n" 1>&2
+    printf "$script: $*\n" 1>&2
 }
 
 #-----------------------------------------------------------------------------
@@ -61,7 +65,7 @@ is_command_available ()
 
 is_command_available_or_error ()
 {
-    is_command_available $1 || \
+    is_command_available $1 ||  \
         error 1 "program $1$2 is not in the path or cannot be run"
 }
 

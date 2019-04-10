@@ -1,7 +1,7 @@
 #!/bin/bash
-# simulate.bash
+# x_simulate.bash
 
-. ./setup.bash
+. ./x_setup.bash
 
 #-----------------------------------------------------------------------------
 
@@ -45,9 +45,9 @@ then
     run_gtkwave=0
 fi
 
-[ $run_iverilog = 0 ] && [ $run_vsim = 0 ] && \
-    error 1 "No Verilog simulator is available to run." \
-            "You need to install either Icarus Verilog" \
+[ $run_iverilog = 0 ] && [ $run_vsim = 0 ] &&  \
+    error 1 "No Verilog simulator is available to run."  \
+            "You need to install either Icarus Verilog"  \
             "or Mentor Questa / ModelSim."
 
 #-----------------------------------------------------------------------------
@@ -64,8 +64,10 @@ then
     fi
 
     vvp a.out &> icarus.simulate.log
-
     ec=$?
+
+    sed -i '/^VCD info: dumpfile dump.vcd opened for output.$/d'  \
+        icarus.simulate.log
 
     if [ $ec != 0 ]
     then
@@ -76,6 +78,47 @@ then
 
     info Icarus Verilog simulation successfull
     tail -n 5 icarus.simulate.log
+fi
+
+#-----------------------------------------------------------------------------
+
+if [ $run_gtkwave = 1 ]
+then
+    ec=0
+
+    if    [ "$OSTYPE" = "linux-gnu" ]  \
+       || [ "$OSTYPE" = "cygwin"    ]  \
+       || [ "$OSTYPE" = "msys"      ]
+    then
+        gtkwave                                 \
+            --dump dump.vcd                     \
+            --script ../script_for_gtkwave.tcl  \
+            &> waveform.log
+
+    elif [ ${OSTYPE/[0-9]*/} = "darwin" ]
+    # elif [[ "$OSTYPE" = "darwin"* ]]  # Alternative way
+    then
+        # For some reason the following way of opening the application
+        # does not read the script file:
+        #
+        # open -a gtkwave dump.vcd --args --script $PWD/../script_for_gtkwave.tcl
+        #
+        # This way works:
+
+        /Applications/gtkwave.app/Contents/MacOS/gtkwave-bin  \
+            --dump dump.vcd --script ../script_for_gtkwave.tcl        \
+            &> waveform.log
+    else
+        error 1 "don't know how to run GTKWave on your OS $OSTYPE"
+    fi
+
+    ec=$?
+
+    if [ $ec != 0 ]
+    then
+        grep -i -A 5 error waveform.log 2>&1
+        error 1 "waveform viewer failed"
+    fi
 fi
 
 #-----------------------------------------------------------------------------

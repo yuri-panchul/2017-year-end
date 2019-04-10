@@ -1,13 +1,13 @@
 #!/bin/bash
 
-. ./setup.bash
+. ./x_setup.bash
 
 #-----------------------------------------------------------------------------
 
 prepare_simulation_directory ()
 {
     if ! { rm -rf sim && mkdir sim && cd sim ; }; then
-        echo $0: Cannot prepare simulation directory
+        echo $script: Cannot prepare simulation directory
         exit 1
     fi
 }
@@ -24,19 +24,19 @@ is_icarus_verilog_available ()
 simulate_icarus_verilog ()
 {
     if ! iverilog -g2005 -I .. ../*.v &> compile.log ; then
-        echo $0: Verilog compiler returned error code
+        echo $script: Verilog compiler returned error code
         grep -i -A 5 error compile.log
         exit 1
     fi
 
     if ! vvp a.out &> simulate.log; then
-        echo $0: Verilog simulator returned error code
+        echo $script: Verilog simulator returned error code
         grep -i -A 5 error simulate.log
         tail -n 5 simulate.log
         exit 1
     fi
 
-    echo $0: Simulation successfull
+    echo $script: Simulation successfull
     tail -n 5 simulate.log
 }
 
@@ -82,7 +82,7 @@ run_gtkwave_viewer ()
 
     if [ $rc -ne 0 ]
     then
-        echo $0: Waveform viewer returned error code $rc
+        echo $script: Waveform viewer returned error code $rc
         grep -i -A 5 error waveform.log
         exit 1
     fi
@@ -113,7 +113,7 @@ run_modelsim ()
 
     if [ $rc -ne 0 ]
     then
-        echo $0: Modelsim returned error code $rc
+        echo $script: Modelsim returned error code $rc
         grep -i -A 5 error modelsim.log
         exit 1
     fi

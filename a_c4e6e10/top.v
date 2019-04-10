@@ -67,6 +67,8 @@ module top
 
     //------------------------------------------------------------------------
 
+    wire out_moore_fsm;
+
     moore_fsm i_moore_fsm
     (
         .clk   ( clk           ),
@@ -85,6 +87,8 @@ module top
     );
 
     //------------------------------------------------------------------------
+
+    wire out_mealy_fsm;
 
     mealy_fsm i_mealy_fsm
     (

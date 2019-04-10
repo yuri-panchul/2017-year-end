@@ -1,7 +1,7 @@
 #!/bin/bash
-# synthesize.bash
+# x_synthesize.bash
 
-. ./setup.bash
+. ./x_setup.bash
 
 rm -rf $SYN_DIR
 mkdir -p $SYN_DIR
@@ -12,6 +12,6 @@ cd $SYN_DIR
 quartus_sh --no_banner --flow compile top | tee syn.log
 
 cd ..
-./configure.bash
+./x_configure.bash
 
 exit 0

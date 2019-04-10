@@ -1,7 +1,7 @@
 #!/bin/bash
-# clean.bash
+# x_clean.bash
 
-. ./setup.bash
+. ./x_setup.bash
 
 guarded rm -rf $SIM_DIR $SYN_DIR
 
