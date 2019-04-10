@@ -10,7 +10,7 @@ guarded mkdir -p  $SYN_DIR
 guarded cd        $SYN_DIR
 
 guarded cp ../top.qsf .
-guarded printf "# This file can be empty, all the settings are in .qsf file\n" > top.qpf
+guarded echo "# This file can be empty, all the settings are in .qsf file" > top.qpf
 
 #-----------------------------------------------------------------------------
 
