@@ -3,15 +3,30 @@
 
 . ./x_setup.bash
 
-rm -rf $SYN_DIR
-mkdir -p $SYN_DIR
-cp top.qsf $SYN_DIR
-echo "# This file can be empty, all the settings are in .qsf file" > $SYN_DIR/top.qpf
-cd $SYN_DIR
+#-----------------------------------------------------------------------------
 
-quartus_sh --no_banner --flow compile top | tee syn.log
+guarded rm    -rf $SYN_DIR
+guarded mkdir -p  $SYN_DIR
+guarded cd        $SYN_DIR
+
+guarded cp ../top.qsf .
+guarded printf "# This file can be empty, all the settings are in .qsf file\n" > top.qpf
+
+#-----------------------------------------------------------------------------
+
+is_command_available_or_error quartus_sh " from Intel FPGA Quartus II package"
+
+quartus_sh --no_banner --flow compile top 2>&1 | tee syn.log
+
+ec=$?
+
+if [ $ec != 0 ]
+then
+    grep -i -A 5 error syn.log 2>&1
+    error $ec "synthesis failed"
+fi
+
+#-----------------------------------------------------------------------------
 
 cd ..
 ./x_configure.bash
-
-exit 0
