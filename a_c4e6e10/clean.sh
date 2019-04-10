@@ -3,4 +3,4 @@
 
 . ./setup.sh
 
-rm -rf $SIM_DIR $SYN_DIR
+guarded rm -rf $SIM_DIR $SYN_DIR

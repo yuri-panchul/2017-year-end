@@ -50,7 +50,7 @@ module testbench;
 
         @ (posedge rst_n);
 
-        repeat (10000)
+        repeat (1000)
         begin
             @ (posedge clk);
 
@@ -58,7 +58,11 @@ module testbench;
             sw  <= $random;
         end
 
-        $stop;
+        `ifdef MODEL_TECH  // Mentor ModelSim and Questa
+            $stop;
+        `else
+            $finish;
+        `endif
     end
 
 endmodule
